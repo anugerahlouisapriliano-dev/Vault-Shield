@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vault-Shield | Digital Security Tools</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap');
+
+  :root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #0d1526;
+    --bg-card: #111827;
+    --bg-card2: #0d1c33;
+    --cyan: #00f5ff;
+    --cyan-dim: #00c8d4;
+    --cyan-glow: rgba(0, 245, 255, 0.18);
+    --cyan-glow2: rgba(0, 245, 255, 0.07);
+    --green: #00ff88;
+    --green-glow: rgba(0, 255, 136, 0.2);
+    --yellow: #ffd700;
+    --red: #ff4757;
+    --orange: #ff6b35;
+    --text-primary: #e2f0f8;
+    --text-secondary: #7a9ab8;
+    --text-mono: #a0cfe8;
+    --border: rgba(0, 245, 255, 0.12);
+    --border-active: rgba(0, 245, 255, 0.4);
+    --font-display: 'Orbitron', monospace;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SCANLINE OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .container {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 28px 0 20px;
+    position: relative;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--cyan);
+    background: var(--cyan-glow2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    animation: pulse-badge 3s ease-in-out infinite;
+  }
+
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--green);
+    animation: blink 1.4s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  @keyframes pulse-badge {
+    0%,100% { box-shadow: 0 0 0 rgba(0,245,255,0); }
+    50% { box-shadow: 0 0 14px rgba(0,245,255,0.15); }
+  }
+
+  .logo-shield {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 12px;
+    position: relative;
+    filter: drop-shadow(0 0 16px rgba(0,245,255,0.5));
+    animation: shield-float 4s ease-in-out infinite;
+  }
+
+  @keyframes shield-float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .logo-shield svg { width: 100%; height: 100%; }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 6vw, 30px);
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--text-primary);
+    text-shadow: 0 0 24px var(--cyan), 0 0 48px rgba(0,245,255,0.2);
+    animation: title-glow 3s ease-in-out infinite;
+  }
+
+  @keyframes title-glow {
+    0%,100% { text-shadow: 0 0 24px var(--cyan), 0 0 48px rgba(0,245,255,0.2); }
+    50% { text-shadow: 0 0 32px var(--cyan), 0 0 60px rgba(0,245,255,0.35); }
+  }
+
+  .subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 2px;
+    margin-top: 6px;
+  }
+
+  /* ── PRIVACY NOTICE ── */
+  .privacy-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,255,136,0.06);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--green);
+    letter-spacing: 0.5px;
+  }
+
+  .privacy-note svg { flex-shrink: 0; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.6;
+  }
+
+  .card:hover {
+    border-color: var(--border-active);
+    box-shadow: 0 0 28px rgba(0,245,255,0.08);
+  }
+
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    margin-bottom: 20px;
+  }
+
+  .card-title svg { opacity: 0.9; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+  }
+
+  /* ── SLIDER ── */
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .slider-val {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cyan);
+    min-width: 36px;
+    text-align: center;
+    text-shadow: 0 0 12px rgba(0,245,255,0.5);
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    flex: 1;
+    height: 5px;
+    background: rgba(0,245,255,0.15);
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    background: var(--bg-primary);
+    border: 2px solid var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 12px rgba(0,245,255,0.5);
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+  }
+
+  input[type="range"]:active::-webkit-slider-thumb {
+    box-shadow: 0 0 20px rgba(0,245,255,0.8);
+  }
+
+  /* ── CHECKBOXES ── */
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0,245,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    user-select: none;
+  }
+
+  .option-item:active { transform: scale(0.97); }
+
+  .option-item.active {
+    background: rgba(0,245,255,0.1);
+    border-color: var(--cyan);
+  }
+
+  .option-item input[type="checkbox"] { display: none; }
+
+  .custom-check {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border-active);
+    border-radius: 5px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .option-item.active .custom-check {
+    background: var(--cyan);
+    border-color: var(--cyan);
+  }
+
+  .check-mark {
+    display: none;
+    color: var(--bg-primary);
+    font-size: 11px;
+    font-weight: 900;
+  }
+
+  .option-item.active .check-mark { display: block; }
+
+  .option-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── PASSWORD OUTPUT ── */
+  .pw-output-wrap {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 14px 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    transition: border-color 0.3s;
+    min-height: 56px;
+  }
+
+  .pw-output-wrap:focus-within,
+  .pw-output-wrap.active {
+    border-color: var(--border-active);
+    box-shadow: 0 0 16px rgba(0,245,255,0.1);
+  }
+
+  #generated-pw {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--cyan);
+    background: none;
+    border: none;
+    outline: none;
+    word-break: break-all;
+    letter-spacing: 1px;
+    cursor: default;
+  }
+
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .copy-btn:active,
+  .copy-btn.copied {
+    background: rgba(0,245,255,0.12);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  /* ── BUTTONS ── */
+  .btn-generate {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(0,245,255,0.05));
+    border: 1px solid var(--cyan);
+    border-radius: 12px;
+    color: var(--cyan);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.25s;
+    box-shadow: 0 0 20px rgba(0,245,255,0.1), inset 0 0 20px rgba(0,245,255,0.03);
+  }
+
+  .btn-generate::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -60%;
+    width: 60%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.15), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s;
+  }
+
+  .btn-generate:hover::before { left: 120%; }
+
+  .btn-generate:hover {
+    box-shadow: 0 0 32px rgba(0,245,255,0.25), inset 0 0 20px rgba(0,245,255,0.07);
+  }
+
+  .btn-generate:active {
+    transform: scale(0.98);
+    box-shadow: 0 0 16px rgba(0,245,255,0.15);
+  }
+
+  /* ── STRENGTH CHECKER ── */
+  .input-wrap {
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .input-wrap svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+  }
+
+  #checker-input {
+    width: 100%;
+    padding: 14px 14px 14px 44px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 1px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  #checker-input:focus {
+    border-color: var(--border-active);
+    box-shadow: 0 0 16px rgba(0,245,255,0.1);
+  }
+
+  #checker-input::placeholder {
+    color: rgba(120,160,180,0.5);
+    letter-spacing: 0.5px;
+    font-size: 12px;
+  }
+
+  /* ── STRENGTH BAR ── */
+  .strength-bar-wrap {
+    margin-bottom: 14px;
+  }
+
+  .strength-bar-bg {
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .strength-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.4s;
+  }
+
+  .strength-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .strength-label {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: color 0.4s;
+  }
+
+  .strength-score {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+  }
+
+  /* ── STRENGTH CRITERIA ── */
+  .criteria-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-top: 14px;
+  }
+
+  .criteria-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    transition: color 0.3s;
+    padding: 6px 8px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+
+  .criteria-item.pass {
+    color: var(--green);
+    border-color: rgba(0,255,136,0.15);
+    background: rgba(0,255,136,0.05);
+  }
+
+  .criteria-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    flex-shrink: 0;
+    transition: background 0.3s, box-shadow 0.3s;
+  }
+
+  .criteria-item.pass .criteria-dot {
+    background: var(--green);
+    box-shadow: 0 0 6px rgba(0,255,136,0.6);
+  }
+
+  /* ── ENTROPY DISPLAY ── */
+  .entropy-display {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+  }
+
+  .entropy-val {
+    color: var(--yellow);
+    font-size: 13px;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(255,215,0,0.4);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 24px 0 32px;
+  }
+
+  .footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-active), transparent);
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .footer-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    line-height: 1.8;
+  }
+
+  .footer-text span {
+    color: var(--cyan);
+    font-weight: 600;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: rgba(0,245,255,0.12);
+    border: 1px solid var(--cyan);
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--cyan);
+    letter-spacing: 1px;
+    z-index: 100;
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+    box-shadow: 0 0 24px rgba(0,245,255,0.2);
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* ── GLITCH ANIMATE ── */
+  @keyframes glitch {
+    0% { clip-path: inset(10% 0 85% 0); transform: translate(-2px); }
+    10% { clip-path: inset(65% 0 10% 0); transform: translate(2px); }
+    20% { clip-path: inset(30% 0 50% 0); transform: translate(-1px); }
+    30%,100% { clip-path: inset(0 0 0 0); transform: translate(0); opacity: 0; }
+  }
+
+  /* ── CARD ENTER ANIMATION ── */
+  .card {
+    animation: card-in 0.6s ease-out both;
+  }
+  .card:nth-child(2) { animation-delay: 0.15s; }
+  .card:nth-child(3) { animation-delay: 0.3s; }
+
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE FINE-TUNE ── */
+  @media (max-width: 380px) {
+    .options-grid { grid-template-columns: 1fr 1fr; }
+    .criteria-list { grid-template-columns: 1fr; }
+    h1 { font-size: 20px; letter-spacing: 3px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-badge">
+      <span class="badge-dot"></span>
+      SYSTEM ACTIVE — ALL PROCESSES LOCAL
+    </div>
+
+    <div class="logo-shield">
+      <svg viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="shieldGrad" x1="0" y1="0" x2="64" y2="72" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#00f5ff" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#0066aa" stop-opacity="0.1"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M32 2L6 14v18c0 16 11.2 30.4 26 34C46.8 62.4 58 48 58 32V14L32 2Z"
+          fill="url(#shieldGrad)" stroke="#00f5ff" stroke-width="1.5" filter="url(#glow)"/>
+        <path d="M32 10L12 20v12c0 11 7.4 20.8 20 23.2C44.6 52.8 52 43 52 32V20L32 10Z"
+          fill="none" stroke="rgba(0,245,255,0.3)" stroke-width="0.8"/>
+        <!-- Lock icon inside -->
+        <rect x="25" y="33" width="14" height="12" rx="2" fill="none" stroke="#00f5ff" stroke-width="1.5"/>
+        <path d="M27 33v-3a5 5 0 0 1 10 0v3" fill="none" stroke="#00f5ff" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="32" cy="39" r="1.8" fill="#00f5ff"/>
+        <line x1="32" y1="40.8" x2="32" y2="43" stroke="#00f5ff" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <h1>VAULT-SHIELD</h1>
+    <p class="subtitle">DIGITAL SECURITY TOOLKIT v2.0</p>
+  </header>
+
+  <!-- PRIVACY NOTICE -->
+  <div class="privacy-note">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Website ini tidak menyimpan data apapun. Semua diproses di browser kamu.
+  </div>
+
+  <!-- CARD 1: GENERATOR -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M21 2H3v16h5v4l4-4h5l4-4V2z"/>
+        <line x1="9" y1="8" x2="15" y2="8"/><line x1="9" y1="12" x2="13" y2="12"/>
+      </svg>
+      PASSWORD GENERATOR
+    </div>
+
+    <div class="section-label">// PANJANG PASSWORD</div>
+    <div class="slider-row">
+      <input type="range" id="pw-length" min="8" max="32" value="16">
+      <div class="slider-val" id="length-display">16</div>
+    </div>
+
+    <div class="section-label">// KARAKTER YANG DISERTAKAN</div>
+    <div class="options-grid">
+      <label class="option-item active" id="opt-upper">
+        <input type="checkbox" id="cb-upper" checked>
+        <div class="custom-check"><span class="check-mark">✓</span></div>
+        <span class="option-label">A-Z HURUF</span>
+      </label>
+      <label class="option-item active" id="opt-lower">
+        <input type="checkbox" id="cb-lower" checked>
+        <div class="custom-check"><span class="check-mark">✓</span></div>
+        <span class="option-label">a-z huruf</span>
+      </label>
+      <label class="option-item active" id="opt-numbers">
+        <input type="checkbox" id="cb-numbers" checked>
+        <div class="custom-check"><span class="check-mark">✓</span></div>
+        <span class="option-label">0-9 ANGKA</span>
+      </label>
+      <label class="option-item active" id="opt-symbols">
+        <input type="checkbox" id="cb-symbols" checked>
+        <div class="custom-check"><span class="check-mark">✓</span></div>
+        <span class="option-label">!@# SIMBOL</span>
+      </label>
+    </div>
+
+    <div class="section-label">// OUTPUT PASSWORD</div>
+    <div class="pw-output-wrap" id="output-wrap">
+      <div id="generated-pw">Tekan generate...</div>
+      <button class="copy-btn" id="copy-btn" onclick="copyPassword()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        COPY
+      </button>
+    </div>
+
+    <button class="btn-generate" onclick="generatePassword()">
+      ⚡ GENERATE PASSWORD
+    </button>
+  </div>
+
+  <!-- CARD 2: STRENGTH CHECKER -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+      </svg>
+      STRENGTH ANALYZER
+    </div>
+
+    <div class="section-label">// MASUKKAN PASSWORD</div>
+    <div class="input-wrap">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      <input type="text" id="checker-input" placeholder="Ketik atau paste password di sini..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="strength-bar-wrap">
+      <div class="strength-bar-bg">
+        <div class="strength-bar-fill" id="strength-bar"></div>
+      </div>
+      <div class="strength-status-row">
+        <span class="strength-label" id="strength-label" style="color: var(--text-secondary)">— STANDBY —</span>
+        <span class="strength-score" id="strength-score"></span>
+      </div>
+    </div>
+
+    <div class="criteria-list" id="criteria-list">
+      <div class="criteria-item" data-id="length8"><div class="criteria-dot"></div>Min. 8 karakter</div>
+      <div class="criteria-item" data-id="length12"><div class="criteria-dot"></div>12+ karakter</div>
+      <div class="criteria-item" data-id="upper"><div class="criteria-dot"></div>Huruf besar</div>
+      <div class="criteria-item" data-id="lower"><div class="criteria-dot"></div>Huruf kecil</div>
+      <div class="criteria-item" data-id="numbers"><div class="criteria-dot"></div>Angka</div>
+      <div class="criteria-item" data-id="symbols"><div class="criteria-dot"></div>Simbol khusus</div>
+    </div>
+
+    <div class="entropy-display">
+      <span>ESTIMASI ENTROPI</span>
+      <span class="entropy-val" id="entropy-val">— bits</span>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="container">
+  <footer>
+    <div class="footer-divider"></div>
+    <div class="footer-text">
+      Secured by <span>Anugrah Louis</span><br>
+      Protecting the Digital World from Mobile.
+    </div>
+  </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── SLIDER ── */
+  const slider = document.getElementById('pw-length');
+  const lenDisplay = document.getElementById('length-display');
+  slider.addEventListener('input', () => {
+    lenDisplay.textContent = slider.value;
+  });
+
+  /* ── CHECKBOX TOGGLE ── */
+  const checkboxMeta = [
+    { wrap: 'opt-upper', cb: 'cb-upper' },
+    { wrap: 'opt-lower', cb: 'cb-lower' },
+    { wrap: 'opt-numbers', cb: 'cb-numbers' },
+    { wrap: 'opt-symbols', cb: 'cb-symbols' },
+  ];
+
+  checkboxMeta.forEach(({ wrap, cb }) => {
+    const wrapEl = document.getElementById(wrap);
+    const cbEl = document.getElementById(cb);
+    wrapEl.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Prevent unchecking all
+      const allChecked = checkboxMeta.filter(m => document.getElementById(m.cb).checked);
+      if (allChecked.length === 1 && cbEl.checked) {
+        showToast('⚠ Minimal 1 jenis karakter harus aktif!');
+        return;
+      }
+      cbEl.checked = !cbEl.checked;
+      wrapEl.classList.toggle('active', cbEl.checked);
+    });
+  });
+
+  /* ── GENERATE ── */
+  function generatePassword() {
+    const length = parseInt(slider.value);
+    const useUpper = document.getElementById('cb-upper').checked;
+    const useLower = document.getElementById('cb-lower').checked;
+    const useNumbers = document.getElementById('cb-numbers').checked;
+    const useSymbols = document.getElementById('cb-symbols').checked;
+
+    let charset = '';
+    const guaranteed = [];
+
+    if (useUpper) { charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; guaranteed.push(randomFrom('ABCDEFGHIJKLMNOPQRSTUVWXYZ')); }
+    if (useLower) { charset += 'abcdefghijklmnopqrstuvwxyz'; guaranteed.push(randomFrom('abcdefghijklmnopqrstuvwxyz')); }
+    if (useNumbers) { charset += '0123456789'; guaranteed.push(randomFrom('0123456789')); }
+    if (useSymbols) { charset += '!@#$%^&*()-_=+[]{}|;:,.<>?'; guaranteed.push(randomFrom('!@#$%^&*()-_=+[]{}|;:,.<>?')); }
+
+    let pw = [...guaranteed];
+    for (let i = pw.length; i < length; i++) {
+      pw.push(charset[Math.floor(Math.random() * charset.length)]);
+    }
+
+    // Shuffle
+    for (let i = pw.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pw[i], pw[j]] = [pw[j], pw[i]];
+    }
+
+    const result = pw.join('');
+    const el = document.getElementById('generated-pw');
+
+    // Scramble animation
+    let iter = 0;
+    const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+    const interval = setInterval(() => {
+      el.textContent = result.split('').map((c, i) =>
+        i < iter ? c : scrambleChars[Math.floor(Math.random() * scrambleChars.length)]
+      ).join('');
+      if (iter >= result.length) { clearInterval(interval); el.textContent = result; }
+      iter += 2;
+    }, 28);
+
+    document.getElementById('output-wrap').classList.add('active');
+    const copyBtn = document.getElementById('copy-btn');
+    copyBtn.classList.remove('copied');
+    copyBtn.querySelector('span') && (copyBtn.querySelector('span').textContent = 'COPY');
+
+    // Also run checker on generated password
+    document.getElementById('checker-input').value = result;
+    checkStrength(result);
+  }
+
+  function randomFrom(str) {
+    return str[Math.floor(Math.random() * str.length)];
+  }
+
+  /* ── COPY ── */
+  function copyPassword() {
+    const pw = document.getElementById('generated-pw').textContent;
+    if (!pw || pw === 'Tekan generate...') { showToast('⚠ Generate password dulu!'); return; }
+    navigator.clipboard.writeText(pw).then(() => {
+      const btn = document.getElementById('copy-btn');
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> COPIED`;
+      showToast('✓ Password berhasil disalin!');
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> COPY`;
+      }, 2500);
+    }).catch(() => showToast('⚠ Gagal menyalin, coba manual.'));
+  }
+
+  /* ── STRENGTH CHECKER ── */
+  const checkerInput = document.getElementById('checker-input');
+  checkerInput.addEventListener('input', (e) => checkStrength(e.target.value));
+
+  function checkStrength(pw) {
+    const bar = document.getElementById('strength-bar');
+    const label = document.getElementById('strength-label');
+    const scoreEl = document.getElementById('strength-score');
+    const entropyEl = document.getElementById('entropy-val');
+
+    if (!pw) {
+      bar.style.width = '0%';
+      label.textContent = '— STANDBY —';
+      label.style.color = 'var(--text-secondary)';
+      scoreEl.textContent = '';
+      entropyEl.textContent = '— bits';
+      resetCriteria();
+      return;
+    }
+
+    // Criteria
+    const c = {
+      length8:  pw.length >= 8,
+      length12: pw.length >= 12,
+      upper:    /[A-Z]/.test(pw),
+      lower:    /[a-z]/.test(pw),
+      numbers:  /[0-9]/.test(pw),
+      symbols:  /[^A-Za-z0-9]/.test(pw),
+    };
+
+    // Update criteria UI
+    Object.entries(c).forEach(([key, pass]) => {
+      const el = document.querySelector(`[data-id="${key}"]`);
+      if (el) el.classList.toggle('pass', pass);
+    });
+
+    // Score
+    let score = 0;
+    if (c.length8)  score += 15;
+    if (c.length12) score += 15;
+    if (pw.length >= 20) score += 10;
+    if (c.upper)    score += 15;
+    if (c.lower)    score += 15;
+    if (c.numbers)  score += 15;
+    if (c.symbols)  score += 15;
+    score = Math.min(score, 100);
+
+    // Strength level
+    let lvl, color;
+    if (score <= 25) {
+      lvl = 'WEAK'; color = 'var(--red)';
+      bar.style.background = `linear-gradient(90deg, var(--red), #ff6b6b)`;
+    } else if (score <= 50) {
+      lvl = 'MEDIUM'; color = 'var(--orange)';
+      bar.style.background = `linear-gradient(90deg, var(--orange), #ffd06b)`;
+    } else if (score <= 75) {
+      lvl = 'STRONG'; color = 'var(--yellow)';
+      bar.style.background = `linear-gradient(90deg, var(--yellow), #a0ff80)`;
+    } else {
+      lvl = '⚡ GOD MODE'; color = 'var(--cyan)';
+      bar.style.background = `linear-gradient(90deg, var(--cyan), var(--green))`;
+      bar.style.boxShadow = `0 0 14px rgba(0,245,255,0.5)`;
+    }
+
+    if (score <= 75) bar.style.boxShadow = 'none';
+
+    bar.style.width = score + '%';
+    label.textContent = lvl;
+    label.style.color = color;
+    scoreEl.textContent = `SCORE: ${score}/100`;
+
+    // Entropy estimate
+    let charsetSize = 0;
+    if (/[A-Z]/.test(pw)) charsetSize += 26;
+    if (/[a-z]/.test(pw)) charsetSize += 26;
+    if (/[0-9]/.test(pw)) charsetSize += 10;
+    if (/[^A-Za-z0-9]/.test(pw)) charsetSize += 32;
+    const entropy = charsetSize > 0 ? Math.round(pw.length * Math.log2(charsetSize)) : 0;
+    entropyEl.textContent = `${entropy} bits`;
+  }
+
+  function resetCriteria() {
+    document.querySelectorAll('.criteria-item').forEach(el => el.classList.remove('pass'));
+  }
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  /* ── INIT: auto generate on load ── */
+  window.addEventListener('load', () => {
+    setTimeout(generatePassword, 400);
+  });
+</script>
+</body>
+</html>
